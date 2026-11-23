@@ -1,0 +1,6 @@
+*.o
+kernel.elf
+esp/
+OVMF_VARS.fd
+*.img
+qemu.log
