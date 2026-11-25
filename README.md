@@ -116,7 +116,7 @@ To read the machine code: `objdump -d -M intel kernel.elf`.
 - [x] Keyboard input and timing
 - [x] Snake game with levels, hunger, and multiple fruit
 - [x] HUD
-- [ ] Main menu (play / exit)
+- [x] Main menu (play / exit)
 - [ ] Bootable USB image (GPT + FAT32 EFI System Partition)
 - [ ] Handle a fixed-load-address failure on real hardware
 
