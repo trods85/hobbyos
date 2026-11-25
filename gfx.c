@@ -1,6 +1,6 @@
 #include "gfx.h"
 
-static const char FONT_CHARS[] = "SNAKEHOBYRDCLVUG0123456789";
+static const char FONT_CHARS[] = "SNAKEHOBYRDCLVUGPXIT0123456789";
 
 static const uint8_t FONT[][7] = {
 	{0x0F, 0x10, 0x10, 0x0E, 0x01, 0x01, 0x1E}, // S
@@ -19,6 +19,10 @@ static const uint8_t FONT[][7] = {
 	{0x11, 0x11, 0x11, 0x11, 0x11, 0x0A, 0x04}, // V
 	{0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x0E}, // U
 	{0x0E, 0x11, 0x10, 0x17, 0x11, 0x11, 0x0F}, // G
+	{0x1E, 0x11, 0x11, 0x1E, 0x10, 0x10, 0x10}, // P
+	{0x11, 0x11, 0x0A, 0x04, 0x0A, 0x11, 0x11}, // X
+	{0x0E, 0x04, 0x04, 0x04, 0x04, 0x04, 0x0E}, // I
+	{0x1F, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04}, // T
 	{0x0E, 0x11, 0x13, 0x15, 0x19, 0x11, 0x0E}, // 0
 	{0x04, 0x0C, 0x04, 0x04, 0x04, 0x04, 0x0E}, // 1
 	{0x0E, 0x11, 0x01, 0x02, 0x04, 0x08, 0x1F}, // 2
@@ -64,6 +68,23 @@ void fill_screen(BootInfo *info, UINT32 color){
 }
 
 // Text drawing shit. 
+
+void draw_menu(BootInfo *bi, const char *const *items, UINT32 n, UINT32 selected, UINT32 y, UINT32 scale, UINT32 on, UINT32 off, UINT32 bg){
+	const UINT32 row = 10 * scale;
+	UINT32 maxlen = 0;
+	for (UINT32 i = 0; i < n; i++){
+		UINT32 len = 0;
+		while (items[i][len])len++;
+		if(len > maxlen) maxlen = len;
+	}
+	UINT32 w = maxlen * 6 * scale + 2 * scale;
+	UINT32 x = (w < bi->Width) ? (bi->Width - w) / 2 : 0;
+
+	fill_rect(bi, x, y, w, n*row, bg);
+	for(UINT32 i = 0; i < n; i++){
+		draw_text_centered(bi, items[i], y + i * row, scale, i == selected ? on : off);
+	}
+}
 
 void draw_text(BootInfo *info, const char *t, UINT32 x, UINT32 y, UINT32 scale, UINT32 color){
 	for(; *t; t++, x+= 6 * scale) draw_char(info, *t, x, y, scale, color);

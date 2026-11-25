@@ -43,6 +43,7 @@ UINT32 game_decay_ticks(const Game *g);
 
 void game_draw_board(const Game *g, BootInfo *bi); // Full redraw at start of the game.
 void game_draw_update(const Game *g, BootInfo *bi); // Update only changed things
-void game_draw_dead(const Game *g, BootInfo *bi);
+void game_draw_dead(const Game *g, BootInfo *bi, UINT32 selected);
+void game_draw_dead_menu(BootInfo *bi, UINT32 selected);
 
 #endif // GAME_H

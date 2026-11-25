@@ -8,6 +8,13 @@
 #define COLOR_HEAD 0x0000FF00
 #define COLOR_FRUIT 0x00FF3030
 #define COLOR_DEAD 0x00AA2020
+#define DEAD_TITLE_SCALE 8
+#define DEAD_MENU_SCALE 4
+#define DEAD_PAD 24
+#define DEAD_BG 0x00101010
+#define DEAD_BH (DEAD_PAD + 7 * DEAD_TITLE_SCALE + 24 + MENU_ITEMS * 10 * DEAD_MENU_SCALE + DEAD_PAD)
+
+static const char *const DEAD_ITEMS[MENU_ITEMS] = {"PLAY AGAIN", "EXIT"};
 
 //
 // HELPERS
@@ -204,18 +211,26 @@ void game_draw_update(const Game *g, BootInfo *bi){
 			draw_cell(g, bi, g->fruit[i].x, g->fruit[i].y, COLOR_FRUIT);
 }
 
-void game_draw_dead(const Game *g, BootInfo *bi){
+static UINT32 dead_top(const BootInfo *bi) {
+	return (bi->Height > DEAD_BH) ? (bi->Height - DEAD_BH)/2:0;
+}
+
+void game_draw_dead_menu(BootInfo *bi, UINT32 selected){
+	UINT32 y = dead_top(bi) + DEAD_PAD + 7 * DEAD_TITLE_SCALE + 24;
+	draw_menu(bi, DEAD_ITEMS, MENU_ITEMS, selected, y, DEAD_MENU_SCALE, COLOR_HEAD, 0x00777777, DEAD_BG);
+}
+
+
+void game_draw_dead(const Game *g, BootInfo *bi, UINT32 selected){
 	for(UINT32 i = 0; i < g->length; i++){
 		Cell c = segment(g, i);
 		draw_cell(g, bi, c.x, c.y, COLOR_DEAD);
 	}
+	UINT32 bw = 9 * 6 * DEAD_TITLE_SCALE - DEAD_TITLE_SCALE + 2 * DEAD_PAD;
+	UINT32 top = dead_top(bi);
+	UINT32 bx = (bi->Width > bw) ? (bi->Width - bw)/2:0;
 
-	const UINT32 scale = 8, pad = 24;
-	UINT32 text_w = 9 * 6 * scale - scale;
-	UINT32 bw = text_w + 2 * pad, bh = 7 * scale + 2 * pad;
-	UINT32 bx = (bi->Width > bw)?(bi->Width - bw) /2:0;
-	UINT32 by = (bi->Height > bh)?(bi->Height - bh)/2:0;
-
-	fill_rect(bi, bx, by, bw, bh, 0x00101010);
-	draw_text_centered(bi, "SNERK DED", by + pad, scale, 0x00FF4040);
+	fill_rect(bi, bx, top, bw, DEAD_BH, DEAD_BG);
+	draw_text_centered(bi, "SNERK DED", top + DEAD_PAD, DEAD_TITLE_SCALE, 0x00FF4040);
+	game_draw_dead_menu(bi, selected);
 }
