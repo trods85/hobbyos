@@ -122,4 +122,4 @@ To read the machine code: `objdump -d -M intel kernel.elf`.
 
 ## License
 
-Not yet chosen.
+MIT. See [LICENSE](LICENSE).
